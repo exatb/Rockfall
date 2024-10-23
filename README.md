@@ -28,7 +28,7 @@ In VS2022, you need to create a new console project, then launch the NuGet conso
 After installation, add all the sources to your project, build and run!  
 
 
-## The Rockfall demo consists of the following source files:
+**The Rockfall demo consists of the following source files:**
 
 * Camera.cs - Camera class. You can control position, FOV and camera movement.
 * Game.cs - Main game window module. Contains all main events and game logic.
