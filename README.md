@@ -2,7 +2,8 @@
 This demo based on very simple and small 3D engine Rockfall and OpenTK library for demonstrating work the GJKEPA library. Written in pure C#, with a minimum of external references.
 
 GJKEPA library provides a fast and stable realisaton is Gilbert-Johnson-Keerthi (GJK) algorithm and the Expanding Polytope Algorithm (EPA).
-![Link to repository](https://github.com/exatb/GJKEPA)
+
+https://github.com/exatb/GJKEPA
 
 The Rackfall engine includes a simple physics solver for realistic motion and collisions of rigid bodies.
 
@@ -10,7 +11,7 @@ It's easy to use! Just launch it, press A or S to add a cube or sphere. And watc
 
 ![Example of using](https://github.com/exatb/Rockfall/blob/main/Example.jpg)
 
-This demo have 2 directories:
+**This demo have 2 directories:**
 
 Bin - have all binaries for quick start and testing.
 
