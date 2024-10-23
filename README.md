@@ -11,15 +11,19 @@ It's easy to use! Just launch it, press A or S to add a cube or sphere. And watc
 ![Example of using](https://github.com/exatb/Rockfall/blob/main/Example.jpg)
 
 This demo have 2 directories:
+
 Bin - have all binaries for quick start and testing.
+
 Src - Rockfall demo source files. 
+
 
 I used VS2022 to create the project for Windows, but the source code should build and run on other systems.
 
 In VS2022, you need to create a new console project, then launch the NuGet console and type "Install-Package OpenTK".
+
 After installation, add all the sources to your project, build and run!  
 
-The Rockfall demo consists of the following source files:
+## The Rockfall demo consists of the following source files:
 ```
 Camera.cs - Camera class. You can control position, FOV and camera movement.
 Game.cs - Main game window module. Contains all main events and game logic.
