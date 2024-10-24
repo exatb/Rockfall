@@ -12,8 +12,26 @@ namespace Rockfall
 
         public Shader(string vertexPath, string fragmentPath)
         {
-            string VertexShaderSource = File.ReadAllText(vertexPath);
-            string FragmentShaderSource = File.ReadAllText(fragmentPath);
+            string VertexShaderSource;
+            string FragmentShaderSource;
+
+            try
+            {
+                VertexShaderSource = File.ReadAllText(vertexPath);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Vertex shader file not found: " + vertexPath + " Error:" + ex.ToString());
+            }
+
+            try
+            {
+                FragmentShaderSource = File.ReadAllText(fragmentPath);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Fragment shader file not found: " + fragmentPath + " Error:" + ex.ToString());
+            }
 
             int VertexShader = GL.CreateShader(ShaderType.VertexShader);
             GL.ShaderSource(VertexShader, VertexShaderSource);
@@ -41,7 +59,7 @@ namespace Rockfall
             if (success == 0)
             {
                 string infoLog = GL.GetShaderInfoLog(shader);
-                Console.WriteLine($"Ошибка компиляции шейдера ({type}):\n{infoLog}");
+                Console.WriteLine($"Shader compilation error ({type}):\n{infoLog}");
             }
         }
 
@@ -51,7 +69,7 @@ namespace Rockfall
             if (success == 0)
             {
                 string infoLog = GL.GetProgramInfoLog(program);
-                Console.WriteLine($"Ошибка линковки программы:\n{infoLog}");
+                Console.WriteLine($"Program linking error:\n{infoLog}");
             }
         }
 

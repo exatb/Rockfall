@@ -33,7 +33,6 @@ namespace Rockfall
             GL.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
             GL.Enable(EnableCap.DepthTest);
 
-
             // Настройка камеры
             _scene.Camera.Position = new Vector3(0f, 0f, 5f);
 
@@ -66,11 +65,10 @@ namespace Rockfall
             // Создание второго объекта
             CubeMeshGenerator cubeMeshGenerator = new CubeMeshGenerator();
             cubeMeshGenerator.YScale = 0.2f;
-            Mesh mesh3 = cubeMeshGenerator.GenerateMesh();
-            RigidBody body3 = new RigidBody(mesh3.VertexArray, mesh3.IndexArray, new Vector3(0.0f, 0.0f, 1.0f), false); // Красный
-
-            body3.Position = new Vector3(0.5f, 0.0f, 0.0f);
-            _scene.AddRigidBody(body3);
+            Mesh mesh2 = cubeMeshGenerator.GenerateMesh();
+            RigidBody body2 = new RigidBody(mesh2.VertexArray, mesh2.IndexArray, new Vector3(0.0f, 0.0f, 1.0f), false); // Голубой
+            body2.Position = new Vector3(0.5f, 0.0f, 0.0f);
+            _scene.AddRigidBody(body2);
         }
 
         public double Time { get; set; } = 0;
@@ -96,14 +94,19 @@ namespace Rockfall
 
             if ((Time - fpsTime)>1)
             {
-                Console.WriteLine("FPS = " + Frames / Time + " Time " + Time + "c");
+                int triangles = 0;
+                for (int i = 0; i < _scene.RigidBodies.Count; i++) 
+                {
+                    triangles += _scene.RigidBodies[i].WorldVertices.Count();
+                }
+                
+                Console.WriteLine("FPS = " + (Frames / Time).ToString("F0") + ", Time=" + Time.ToString("F2") + "c, Bodies=" + _scene.RigidBodies.Count +", Triangles=" + triangles);
                 fpsTime = Time;
             }
 
             // Обработка ввода
             if (KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Escape))
             {
-                //Dispose();
                 Close();
             }
 
@@ -127,7 +130,7 @@ namespace Rockfall
             {
                 SphereMeshGenerator sphereMeshGenerator = new SphereMeshGenerator();
                 Random random = new Random();
-                sphereMeshGenerator.Radius = 0.2f + 0.5f * (float)random.NextDouble();
+                sphereMeshGenerator.Radius = 0.2f + 0.2f * (float)random.NextDouble();
                 sphereMeshGenerator.Slices = 16;
                 sphereMeshGenerator.Stacks = 8;
 

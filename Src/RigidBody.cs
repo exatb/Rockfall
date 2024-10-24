@@ -196,6 +196,29 @@ namespace Rockfall
         {
             dt = deltaTime;
             t += dt;
+            Random r = new Random();
+            float ra = 100f;
+            Vector3 random_vector = new Vector3(ra * (float)(0.5 - r.NextDouble()), ra * (float)(0.5 - r.NextDouble()), ra * (float)(0.5 - r.NextDouble()));
+
+            //Проверим на валидность полученные при решении колизий величины                 
+            //Невалиность возможна когда одно тело находится внутри другого тела без возможности вычислить ветор выхода из колизии 
+            //При получении такой ситуации случано расталкиваем тела
+            if (double.IsNaN(v.X) || double.IsNaN(v.Y) || double.IsNaN(v.Z))
+            {
+                v = random_vector;  
+            }
+            if (double.IsInfinity(v.X) || double.IsInfinity(v.Y) || double.IsInfinity(v.Z))
+            {
+                v = random_vector;
+            }
+            if (double.IsNaN(w.X) || double.IsNaN(w.Y) || double.IsNaN(w.Z))
+            {
+                w = new Vector3(0, 0, 0);
+            }
+            if (double.IsInfinity(w.X) || double.IsInfinity(w.Y) || double.IsInfinity(w.Z))
+            {
+                w = new Vector3(0, 0, 0);
+            }
 
             if (!Static)
             {
@@ -210,19 +233,6 @@ namespace Rockfall
                 Vector3 qdt = w * dt / 2;
                 q += (new Quaternion(qdt.X, qdt.Y, qdt.Z, 0)) * q;
                 q.Normalize();
-
-                //Проверим на валидность полученные величины                 
-                if (double.IsNaN(p.X) || double.IsNaN(p.Y) || double.IsNaN(p.Z))
-                {
-                    Static = true;
-                    //throw new InvalidOperationException("p==NaN"); //???????????????????????????????
-                }
-                if (double.IsInfinity(p.X) || double.IsInfinity(p.Y) || double.IsInfinity(p.Z))
-                {
-                    Static = true;
-                    //throw new InvalidOperationException("p==Inf"); //???????????????????????????????
-                }
-
             }
             if (Static)   
             {
@@ -308,6 +318,7 @@ namespace Rockfall
             }
 
             //Теперь решим в перпендикулярном направлении (в плоскости контакта)
+            
             Vector3 vectorFromPointToVector = vrel - p;
             float distance = Vector3.Dot(vectorFromPointToVector, n) / Vector3.Dot(n, n);
             Vector3 projection = vectorFromPointToVector - distance * n;
@@ -334,10 +345,10 @@ namespace Rockfall
                 float Jt;
                 if (Math.Abs(ndotg) > max_slope)
                     //Простейшая имитация трения покоя через полное ограничение движения в перпендикулярном направлении
-                    Jt = (-vrel_plane_len) / (a.im + b.im + Vector3.Dot(tmpa, t) + Vector3.Dot(tmpb, t));
+                    Jt = (- vrel_plane_len) / (a.im + b.im + Vector3.Dot(tmpa, t) + Vector3.Dot(tmpb, t));
                 else
                     //Простейшая имитация трения скольжения через частичное ограничение движения в перпендикулярном направлении
-                    Jt = (-vrel_plane_len * kf) / (a.im + b.im + Vector3.Dot(tmpa, t) + Vector3.Dot(tmpb, t));
+                    Jt = (- vrel_plane_len * kf) / (a.im + b.im + Vector3.Dot(tmpa, t) + Vector3.Dot(tmpb, t));
 
                 adv += a.im * Jt * t;
                 bdv -= b.im * Jt * t;
@@ -393,7 +404,14 @@ namespace Rockfall
         public CrossInfo3D IsCollidingWith(RigidBody body)
         {
             CrossInfo3D ci = new CrossInfo3D();
-            ci.Cross = GJK_EPA_BCP.CheckIntersection(WorldVertices, body.WorldVertices, out ci.MidPoint, out ci.Deep, out ci.Out);
+            try
+            {
+                ci.Cross = GJK_EPA_BCP.CheckIntersection(WorldVertices, body.WorldVertices, out ci.MidPoint, out ci.Deep, out ci.Out);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Find intersection error: " + ex.Message);
+            }
             return ci;
         }
 

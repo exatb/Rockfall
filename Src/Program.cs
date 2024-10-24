@@ -8,6 +8,5 @@ Console.ReadKey();
 Console.WriteLine("Start OpenGL window");
 Game game = new(600, 600, "OpenGL window");
 game.Run();
-Console.WriteLine("Stop game. FPS = " + game.Frames / game.Time + " Elapsed " + game.Time + "c");
 
 
